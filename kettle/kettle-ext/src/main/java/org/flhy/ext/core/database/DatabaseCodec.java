@@ -1,33 +1,28 @@
 package org.flhy.ext.core.database;
 
+import org.flhy.ext.utils.JSONArray;
+import org.flhy.ext.utils.JSONObject;
+import org.flhy.ext.utils.StringEscapeHelper;
+import org.pentaho.di.core.database.*;
+import org.pentaho.di.core.database.sap.SAPR3DatabaseMeta;
+import org.pentaho.di.core.encryption.Encr;
+import org.pentaho.di.core.exception.KettleDatabaseException;
+import org.springframework.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import org.flhy.ext.utils.JSONArray;
-import org.flhy.ext.utils.JSONObject;
-import org.flhy.ext.utils.StringEscapeHelper;
-import org.pentaho.di.core.database.BaseDatabaseMeta;
-import org.pentaho.di.core.database.DatabaseConnectionPoolParameter;
-import org.pentaho.di.core.database.DatabaseMeta;
-import org.pentaho.di.core.database.GenericDatabaseMeta;
-import org.pentaho.di.core.database.MSSQLServerNativeDatabaseMeta;
-import org.pentaho.di.core.database.PartitionDatabaseMeta;
-import org.pentaho.di.core.database.SAPR3DatabaseMeta;
-import org.pentaho.di.core.encryption.Encr;
-import org.pentaho.di.core.exception.KettleDatabaseException;
-import org.springframework.util.StringUtils;
-
 public class DatabaseCodec {
 	
 	public static JSONObject encode(DatabaseMeta databaseMeta) {
 		JSONObject jsonObject = new JSONObject();
-		
+
 		jsonObject.put("name", databaseMeta.getDisplayName());
 		jsonObject.put("type", databaseMeta.getPluginId());
 		jsonObject.put("access", databaseMeta.getAccessType());
-		
+
 		jsonObject.put("hostname", databaseMeta.getHostname());
 		jsonObject.put("databaseName", databaseMeta.getDatabaseName());
 		jsonObject.put("username", databaseMeta.getUsername());
@@ -43,11 +38,11 @@ public class DatabaseCodec {
 		jsonObject.put(SAPR3DatabaseMeta.ATTRIBUTE_SAP_LANGUAGE, databaseMeta.getAttributes().getProperty( SAPR3DatabaseMeta.ATTRIBUTE_SAP_LANGUAGE ));
 		jsonObject.put(SAPR3DatabaseMeta.ATTRIBUTE_SAP_SYSTEM_NUMBER, databaseMeta.getAttributes().getProperty( SAPR3DatabaseMeta.ATTRIBUTE_SAP_SYSTEM_NUMBER ));
 		jsonObject.put(SAPR3DatabaseMeta.ATTRIBUTE_SAP_CLIENT, databaseMeta.getAttributes().getProperty( SAPR3DatabaseMeta.ATTRIBUTE_SAP_CLIENT ));
-		
+
 		jsonObject.put(GenericDatabaseMeta.ATRRIBUTE_CUSTOM_URL, databaseMeta.getAttributes().getProperty( GenericDatabaseMeta.ATRRIBUTE_CUSTOM_URL ));
 		jsonObject.put(GenericDatabaseMeta.ATRRIBUTE_CUSTOM_DRIVER_CLASS, databaseMeta.getAttributes().getProperty( GenericDatabaseMeta.ATRRIBUTE_CUSTOM_DRIVER_CLASS ));
 		jsonObject.put("servername", databaseMeta.getServername());
-		
+
 		Object v = databaseMeta.getAttributes().get(MSSQLServerNativeDatabaseMeta.ATTRIBUTE_USE_INTEGRATED_SECURITY);
 		if (v != null && v instanceof String) {
 			String useIntegratedSecurity = (String) v;
